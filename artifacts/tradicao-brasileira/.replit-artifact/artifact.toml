@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "Tradição Brasileira"
+description = "Uma página cultural escolar sobre as histórias dos pratos confirmados na feira de empreendedorismo, valorizando a memória alimentar e a diversidade brasileira."
+version = "1.0.0"
+id = "artifacts/tradicao-brasileira"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 26158
+
+[services.development]
+run = "pnpm --filter @workspace/tradicao-brasileira run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/tradicao-brasileira", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/tradicao-brasileira/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "26158"
+BASE_PATH = "/"
