@@ -1,8 +1,5 @@
 {
-  "build": {
-    "command": "pnpm run build",
-    "routine": "install"
-  },
+  "build": "pnpm run build",
   "installCommand": "pnpm install",
   "framework": "vite"
 }
