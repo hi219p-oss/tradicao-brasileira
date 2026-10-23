@@ -1,6 +1,0 @@
-{
-  "build": "pnpm run build",
-  "framework": "vite",
-  "installCommand": "pnpm install",
-  "root": "artifacts/tradicao-brasileira"
-}
