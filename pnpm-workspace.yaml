@@ -164,3 +164,10 @@ overrides:
   esbuild: "0.28.2"
   # orval pins js-yaml to an exact version older than the CVE fix (>=4.3.2)
   js-yaml: '4.3.2'
+
+allowBuilds:
+  '@rollup/rollup-win32-x64-msvc': true
+  '@swc/core': true
+  '@tailwindcss/oxide': true
+  esbuild: true
+  lightningcss: true

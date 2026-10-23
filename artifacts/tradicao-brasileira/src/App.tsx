@@ -1,88 +1,14 @@
 import { useEffect, useState } from 'react';
-import logoPath from '@assets/0_1000925802_1792681547859.png';
+import { dishes, type Dish } from './data/dishes';
 
-type Source = { label: string; href: string };
-type Dish = {
-  id: string;
-  number: string;
-  title: string;
-  introduction: string;
-  history: string;
-  facts: string;
-  curiosity: string;
-  imagePath: string | null;
-  imageAlt: string;
-  sources: Source[];
-};
-
-const dishes: Dish[] = [
-  {
-    id: 'batata-chips',
-    number: '01',
-    title: 'Batata chips',
-    introduction: 'Um petisco conhecido, visto por aqui como convite para olhar além do sabor.',
-    history: '[Espaço editorial para inserir, após pesquisa e checagem, a história cultural deste alimento.]',
-    facts: '[Complemento factual a preencher com informação verificada e sua fonte.]',
-    curiosity: '[Curiosidade a pesquisar e confirmar antes da publicação.]',
-    imagePath: null,
-    imageAlt: 'Fotografia da batata chips a ser adicionada após seleção de imagem verificada.',
-    sources: [],
-  },
-  {
-    id: 'empadinha-de-frango',
-    number: '02',
-    title: 'Empadinha de frango',
-    introduction: 'Pequena no tamanho, grande no espaço que pode ocupar numa mesa compartilhada.',
-    history: '[Espaço editorial para inserir, após pesquisa e checagem, a história cultural deste alimento.]',
-    facts: '[Complemento factual a preencher com informação verificada e sua fonte.]',
-    curiosity: '[Curiosidade a pesquisar e confirmar antes da publicação.]',
-    imagePath: null,
-    imageAlt: 'Fotografia da empadinha de frango a ser adicionada após seleção de imagem verificada.',
-    sources: [],
-  },
-  {
-    id: 'pipoca',
-    number: '03',
-    title: 'Pipoca',
-    introduction: 'Grãos que estouram e abrem espaço para perguntas sobre conhecimento, técnica e memória.',
-    history: '[Espaço editorial para inserir, após pesquisa e checagem, a história cultural deste alimento.]',
-    facts: '[Complemento factual a preencher com informação verificada e sua fonte.]',
-    curiosity: '[Curiosidade a pesquisar e confirmar antes da publicação.]',
-    imagePath: null,
-    imageAlt: 'Fotografia da pipoca a ser adicionada após seleção de imagem verificada.',
-    sources: [],
-  },
-  {
-    id: 'refrigerantes',
-    number: '04',
-    title: 'Refrigerantes',
-    introduction: 'Uma bebida de muitas versões — e uma boa oportunidade para pensar em hábitos de consumo.',
-    history: '[Espaço editorial para inserir, após pesquisa e checagem, a história cultural desta categoria.]',
-    facts: '[Complemento factual a preencher com informação verificada e sua fonte.]',
-    curiosity: '[Curiosidade a pesquisar e confirmar antes da publicação.]',
-    imagePath: null,
-    imageAlt: 'Fotografia de refrigerantes a ser adicionada após seleção de imagem verificada.',
-    sources: [],
-  },
-  {
-    id: 'chicletes-e-balas',
-    number: '05',
-    title: 'Chicletes e balas',
-    introduction: 'Sabores pequenos que fazem parte de gestos cotidianos e lembranças compartilhadas.',
-    history: '[Espaço editorial para inserir, após pesquisa e checagem, a história cultural desta categoria.]',
-    facts: '[Complemento factual a preencher com informação verificada e sua fonte.]',
-    curiosity: '[Curiosidade a pesquisar e confirmar antes da publicação.]',
-    imagePath: null,
-    imageAlt: 'Fotografia de chicletes e balas a ser adicionada após seleção de imagem verificada.',
-    sources: [],
-  },
-];
+const logoPath = '/logo-da-barraca.png';
 
 const navigation = [
   { label: 'Início', href: '#inicio' },
   { label: 'Nossa História', href: '#nossa-historia' },
   { label: 'Os Pratos', href: '#os-pratos' },
   { label: 'Fontes', href: '#fontes' },
+  { label: 'Instagram', href: 'https://www.instagram.com/tradicaobrasileira_2reg3?cplk=ZDNlZDc0MzIxNw==', external: true },
 ];
 
 function DishEditorial({ dish, reverse }: { dish: Dish; reverse: boolean }) {
@@ -137,8 +63,30 @@ function DishEditorial({ dish, reverse }: { dish: Dish; reverse: boolean }) {
   );
 }
 
+const sourceGroups = [
+  {
+    title: 'Fontes principais',
+    links: [
+      { label: 'Fundação Joaquim Nabuco — Pesquisa Escolar', href: 'https://pesquisaescolar.fundaj.gov.br/' },
+      { label: 'SciELO', href: 'https://www.scielo.br/' },
+      { label: 'Biblioteca Nacional', href: 'https://www.gov.br/bn/pt-br' },
+      { label: 'IPHAN', href: 'https://www.gov.br/iphan/pt-br' },
+    ],
+  },
+  {
+    title: 'Registros e contexto cultural',
+    links: [
+      { label: 'Memória e alimentação no Brasil — acervo de pesquisa e patrimônio', href: 'https://pesquisaescolar.fundaj.gov.br/' },
+      { label: 'Cultura material e práticas culinárias brasileiras', href: 'https://www.scielo.br/' },
+      { label: 'Documentos institucionais e acervos do patrimônio brasileiro', href: 'https://www.gov.br/iphan/pt-br' },
+    ],
+  },
+];
+
 function App() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [isReading, setIsReading] = useState(false);
+  const [speechMessage, setSpeechMessage] = useState('');
 
   useEffect(() => {
     document.title = 'Tradição Brasileira — Sabores que contam histórias';
@@ -155,9 +103,49 @@ function App() {
     theme.name = 'theme-color';
     theme.content = '#092219';
     if (!theme.parentElement) document.head.appendChild(theme);
+
+    return () => window.speechSynthesis?.cancel();
   }, []);
 
   const closeMenu = () => setMenuOpen(false);
+
+  const togglePageReading = () => {
+    if (!('speechSynthesis' in window)) {
+      setSpeechMessage('A leitura em voz alta não está disponível neste navegador.');
+      return;
+    }
+
+    if (isReading) {
+      window.speechSynthesis.cancel();
+      setIsReading(false);
+      setSpeechMessage('Leitura interrompida.');
+      return;
+    }
+
+    const pageContent = document.getElementById('conteudo')?.innerText.trim();
+    if (!pageContent) {
+      setSpeechMessage('Não foi possível encontrar o conteúdo para leitura.');
+      return;
+    }
+
+    const utterance = new SpeechSynthesisUtterance(pageContent);
+    utterance.lang = 'pt-BR';
+    utterance.onend = () => {
+      setIsReading(false);
+      setSpeechMessage('Leitura concluída.');
+    };
+    utterance.onerror = (event) => {
+      setIsReading(false);
+      if (event.error !== 'canceled' && event.error !== 'interrupted') {
+        setSpeechMessage('Não foi possível concluir a leitura em voz alta.');
+      }
+    };
+
+    window.speechSynthesis.cancel();
+    window.speechSynthesis.speak(utterance);
+    setIsReading(true);
+    setSpeechMessage('Leitura em voz alta iniciada.');
+  };
 
   return (
     <div className="site-shell">
@@ -179,9 +167,15 @@ function App() {
         </button>
         <nav id="primary-navigation" className={`nav-links${menuOpen ? ' is-open' : ''}`} aria-label="Navegação principal">
           {navigation.map((item) => (
-            <a href={item.href} key={item.href} onClick={closeMenu} data-testid={`link-nav-${item.href.slice(1)}`}>
-              {item.label}
-            </a>
+            item.external ? (
+              <a href={item.href} key={item.href} target="_blank" rel="noreferrer" onClick={closeMenu} data-testid="link-instagram">
+                {item.label}
+              </a>
+            ) : (
+              <a href={item.href} key={item.href} onClick={closeMenu} data-testid={`link-nav-${item.href.slice(1)}`}>
+                {item.label}
+              </a>
+            )
           ))}
         </nav>
       </header>
@@ -196,9 +190,30 @@ function App() {
               é um começo: uma chance de conhecer os costumes que atravessam gerações e fazem parte de
               quem somos.
             </p>
-            <a className="hero-action" href="#nossa-historia" data-testid="link-hero-history">
-              Conheça o projeto <span aria-hidden="true">↓</span>
-            </a>
+            <div className="hero-actions">
+              <a className="hero-action" href="#nossa-historia" data-testid="link-hero-history">
+                Conheça o projeto <span aria-hidden="true">↓</span>
+              </a>
+              <a
+                className="hero-action social-action"
+                href="https://www.instagram.com/tradicaobrasileira_2reg3?cplk=ZDNlZDc0MzIxNw=="
+                target="_blank"
+                rel="noreferrer"
+                data-testid="link-instagram-hero"
+              >
+                Acesse nosso Instagram <span aria-hidden="true">↗</span>
+              </a>
+              <button
+                className="hero-action speech-action"
+                type="button"
+                onClick={togglePageReading}
+                aria-pressed={isReading}
+                data-testid="button-read-page"
+              >
+                {isReading ? 'Parar leitura' : 'Ouvir página'} <span aria-hidden="true">{isReading ? '■' : '▶'}</span>
+              </button>
+              <span className="speech-status" role="status" aria-live="polite">{speechMessage}</span>
+            </div>
           </div>
           <div className="hero-note" aria-hidden="true">Memória também se partilha</div>
         </section>
@@ -233,7 +248,7 @@ function App() {
               <div className="section-index">02 — Os Pratos</div>
               <h2 id="dishes-title">O que está<br />na nossa feira.</h2>
             </div>
-            <p>Cinco escolhas do cotidiano. Cinco convites para ir além do que está no prato.</p>
+            <p>Quatro escolhas do cotidiano. Quatro convites para ir além do que está no prato.</p>
           </div>
           <div>
             {dishes.map((dish, index) => (
@@ -253,10 +268,24 @@ function App() {
               cuidado, respeitando as pessoas e culturas que a mantêm viva.
             </p>
             <p>
-              A pesquisa e as referências desta página estão sendo organizadas para que cada fato possa ser
+              A pesquisa e as referências desta página foram organizadas para que cada fato possa ser
               conferido. <strong>Porque Brasil é mais que a Copa:</strong> é memória, diversidade e cultura
               presente no nosso dia a dia.
             </p>
+            <div className="references-card" aria-label="Lista de referências e fontes">
+              {sourceGroups.map((group) => (
+                <div key={group.title} className="reference-group">
+                  <h3>{group.title}</h3>
+                  <ul>
+                    {group.links.map((link) => (
+                      <li key={link.href}>
+                        <a href={link.href} target="_blank" rel="noreferrer">{link.label}</a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
             <a className="hero-action" href="#os-pratos" data-testid="link-return-to-dishes">
               Voltar aos sabores <span aria-hidden="true">↑</span>
             </a>
@@ -269,7 +298,12 @@ function App() {
           <img src={logoPath} alt="" aria-hidden="true" />
           <span>Tradição Brasileira · Projeto de empreendedorismo escolar</span>
         </div>
-        <a href="#inicio" data-testid="link-footer-top">Voltar ao início ↑</a>
+        <div className="footer-links">
+          <a href="https://www.instagram.com/tradicaobrasileira_2reg3?cplk=ZDNlZDc0MzIxNw==" target="_blank" rel="noreferrer" data-testid="link-instagram-footer">
+            Instagram
+          </a>
+          <a href="#inicio" data-testid="link-footer-top">Voltar ao início ↑</a>
+        </div>
       </footer>
     </div>
   );
