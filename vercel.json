@@ -1,6 +1,5 @@
 {
-  "build": "pnpm --filter @workspace/tradicao-brasileira run build",
+  "build": "pnpm run build",
   "installCommand": "pnpm install",
-  "framework": "vite",
-  "root": "TradicaoBrasileira/artifacts/tradicao-brasileira"
+  "framework": "vite"
 }
