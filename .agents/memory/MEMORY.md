@@ -1,0 +1,1 @@
+- [Histórias brasileiras caseiras](historias-caseiras.md) — priorizar práticas domésticas e referências locais, sem inventar costumes.

@@ -1,0 +1,19 @@
+kind = "design-system"
+previewPath = "/tradicao-brasileira-design/"
+title = "Tradição Brasileira — Sistema de Design"
+description = "Sistema visual reutilizável para o projeto escolar de empreendedorismo cultural Tradição Brasileira, extraído do logo oficial e da página existente; reúne tokens de cor, tipografia, espaçamento e componentes editoriais para apresentar histórias da cultura alimentar brasileira."
+version = "1.0.0"
+id = "artifacts/tradicao-brasileira-design"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/tradicao-brasileira-design/" ]
+localPort = 25939
+
+[services.development]
+run = "pnpm --filter @workspace/tradicao-brasileira-design run dev"
+
+[services.env]
+PORT = "25939"
+BASE_PATH = "/tradicao-brasileira-design/"
